@@ -7,7 +7,7 @@ using Newtonsoft.Json;
 namespace FluxBandcampIntegration.Controllers
 { 
     [ApiController]
-    [Route("[controller]")]
+    [Route("[controller]/[action]")]
     public class DebugEndpoints : Controller
     {
         private readonly AuthorizationService _authService;
@@ -17,7 +17,7 @@ namespace FluxBandcampIntegration.Controllers
             _authService = authService;
         }
 
-        [HttpGet(Name = "getAuthorizationToken")]
+        [HttpGet]
         public async Task<string> TestBCAuth()
         {
             var token = await _authService.GetAuthorizationToken();
@@ -25,14 +25,15 @@ namespace FluxBandcampIntegration.Controllers
             return JsonConvert.SerializeObject(token);
         }
 
-        [HttpGet(Name = "getAuthorizationToken")]
-        public async Task<string> TestBCAuth2()
+        [HttpPost(Name = "GetSalesByBandId")]
+        public async Task<string> GetSalesByBandId()
         {
             var token = await _authService.GetAuthorizationToken();
 
+
+
             return JsonConvert.SerializeObject(token);
         }
-
     }
 }
 

@@ -1,30 +1,22 @@
-﻿using System;
-using FluxBandcampIntegration.Models;
+﻿using FluxBandcampIntegration.Models;
+using FluxBandcampIntegration.Models.Requests;
 using Newtonsoft.Json;
 
 namespace FluxBandcampIntegration.Clients
 {
-	public class BandcampClient
-	{
+	public class BandcampClient : BaseClient
+    {
 
-        private readonly HttpClient _client;
-        const string url = "https://bandcamp.com/oauth_token";
-
-        public BandcampClient()
-		{
-            _client = new HttpClient();
-		}
-
-        public async Task<AuthorizationToken> FetchBandcampToken(HttpContent content)
+        public async Task<AuthorizationToken> FetchBandcampToken(HttpContent requestPayload)
         { 
-            
+            return JsonConvert.DeserializeObject<AuthorizationToken>(await SendRequest(requestPayload, HttpMethod.Post));
+        }
 
-            var httpContent = new FormUrlEncodedContent(formData);
-            var response = await _client.PostAsync(url, httpContent, CancellationToken.None);
-            var stringContent = await response.Content.ReadAsStringAsync();
+        public async Task<string> GetSalesByBandId(SalesRequest salesRequest, string token)
+        {
+            var content = StringContentify(salesRequest);
 
-            return JsonConvert.DeserializeObject<AuthorizationToken>(stringContent);
-
+            return await SendRequest(content, HttpMethod.Post, token);
         }
     }
 }
