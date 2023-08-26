@@ -1,7 +1,7 @@
 ﻿using System;
 namespace FluxBandcampIntegration.Services
 {
-	public class ConfigurationService
+	public class ConfigurationService 
 	{
 		private readonly IConfiguration _config;
 
@@ -9,6 +9,8 @@ namespace FluxBandcampIntegration.Services
 		{
 			_config = config;
 		}
+
+
 
 		public void Validate()
 		{

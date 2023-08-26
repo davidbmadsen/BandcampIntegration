@@ -1,8 +1,5 @@
 ﻿using FluxBandcampIntegration.Clients;
-using FluxBandcampIntegration.Models;
 using Microsoft.Extensions.Caching.Memory;
-using Newtonsoft.Json;
-
 namespace FluxBandcampIntegration.Services
 {
     public class AuthorizationService
@@ -10,12 +7,19 @@ namespace FluxBandcampIntegration.Services
         private readonly IConfiguration _config;
         private readonly IMemoryCache _cache;
         private readonly BandcampClient _bandcampClient;
+        private readonly string clientId;
+        private readonly string clientSecret;
 
         public AuthorizationService(IConfiguration config, IMemoryCache cache, BandcampClient bandcampClient)
         {
             _config = config;
             _cache = cache;
             _bandcampClient = bandcampClient;
+            clientId = _config.GetValue<string>("Authorization:ClientId")
+                       ?? throw new ArgumentNullException($"{nameof(clientId)}");
+            clientSecret = _config.GetValue<string>("Authorization:ClientSecret")
+                           ?? throw new ArgumentNullException($"{nameof(clientId)}");
+
         }
 
         public async Task<string> GetAuthorizationToken()
@@ -23,9 +27,9 @@ namespace FluxBandcampIntegration.Services
             if (!_cache.TryGetValue("TOKEN", out string authToken))
             {
                 var payload = new FormUrlEncodedContent(new Dictionary<string, string>
-                { 
-                    {"client_id", _config.GetValue<string>("Authorization:ClientId")},
-                    {"client_secret",  _config.GetValue<string>("Authorization:ClientSecret")},
+                {
+                    {"client_id", clientId},
+                    {"client_secret", clientSecret},
                     {"grant_type", "client_credentials"}
                 });
 
