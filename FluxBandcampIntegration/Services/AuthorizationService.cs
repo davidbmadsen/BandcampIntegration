@@ -35,6 +35,9 @@ namespace FluxBandcampIntegration.Services
 
                 var authTokenModel = await _bandcampClient.FetchBandcampToken(payload);
 
+                if (authTokenModel.TokenType == null)
+                    throw new Exception("Too many token requests have been made. Try again later.");
+
                 var options = new MemoryCacheEntryOptions()
                         .SetAbsoluteExpiration(
                               TimeSpan.FromSeconds(authTokenModel.ExpiresIn));

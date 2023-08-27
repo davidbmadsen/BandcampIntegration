@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using FluxBandcampIntegration.Models;
+using Microsoft.AspNetCore.Mvc;
 
 namespace FluxBandcampIntegration.Controllers;
 

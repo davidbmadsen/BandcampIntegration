@@ -1,4 +1,4 @@
-﻿namespace FluxBandcampIntegration;
+﻿namespace FluxBandcampIntegration.Models;
 
 public class WeatherForecast
 {
