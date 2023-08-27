@@ -34,7 +34,7 @@ namespace FluxBandcampIntegration.Controllers
         {
             var token = await _authService.GetAuthorizationToken();
 
-            var response = await _bandcampClient.GetSalesByBandId(salesRequest, token);
+            var response = await _bandcampClient.GetSalesByRequest(salesRequest, token);
 
             string resp = JsonConvert.SerializeObject(response,
                 new JsonSerializerSettings()
