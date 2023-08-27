@@ -1,4 +1,6 @@
-﻿using FluxBandcampIntegration.Services;
+﻿using FluxBandcampIntegration.Clients;
+using FluxBandcampIntegration.Models.Requests;
+using FluxBandcampIntegration.Services;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
@@ -7,14 +9,16 @@ using Newtonsoft.Json;
 namespace FluxBandcampIntegration.Controllers
 { 
     [ApiController]
-    [Route("[controller]/[action]")]
+    [Route("api/[controller]/[action]")]
     public class DebugEndpoints : Controller
     {
         private readonly AuthorizationService _authService;
+        private readonly BandcampClient _bandcampClient;
 
-        public DebugEndpoints(AuthorizationService authService)
+        public DebugEndpoints(AuthorizationService authService, BandcampClient bandcampClient)
         {
             _authService = authService;
+            _bandcampClient = bandcampClient;
         }
 
         [HttpGet]
@@ -25,14 +29,20 @@ namespace FluxBandcampIntegration.Controllers
             return JsonConvert.SerializeObject(token);
         }
 
-        [HttpPost(Name = "GetSalesByBandId")]
-        public async Task<string> GetSalesByBandId()
+        [HttpPost(Name = "getSales")]
+        public async Task<string> GetSales([FromBody] SalesRequest salesRequest)
         {
             var token = await _authService.GetAuthorizationToken();
 
+            var response = await _bandcampClient.GetSalesByBandId(salesRequest, token);
 
+            string resp = JsonConvert.SerializeObject(response,
+                new JsonSerializerSettings()
+                {
+                    ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+                });
 
-            return JsonConvert.SerializeObject(token);
+            return response;
         }
     }
 }

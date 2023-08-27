@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using AutoMapper;
+using Newtonsoft.Json;
 using System.Net.Http.Headers;
 using System.Text;
 
@@ -7,16 +8,18 @@ namespace FluxBandcampIntegration.Clients
 	public class BaseClient
 	{
         private readonly HttpClient _client;
-        const string url = "https://bandcamp.com/oauth_token";
+        private readonly IMapper _mapper;
+        const string url = "https://bandcamp.com/";
 
-        public BaseClient()
+        public BaseClient(IMapper mapper)
         {
             _client = new HttpClient();
+            _mapper = mapper;
         }
 
-        protected async Task<string> SendRequest(HttpContent requestContent,HttpMethod httpMethod, string? token = null)
+        protected async Task<string> SendRequest(HttpContent requestContent, string path, HttpMethod httpMethod,string? token = null)
         {
-            using var requestMessage = new HttpRequestMessage(httpMethod, url);
+            using var requestMessage = new HttpRequestMessage(httpMethod, url + path);
 
             requestMessage.Content = requestContent;
 
@@ -28,9 +31,11 @@ namespace FluxBandcampIntegration.Clients
             return await response.Content.ReadAsStringAsync();
         }
 
-        protected static HttpContent StringContentify<T>(T content)
+        protected HttpContent CreateRequestBody<TIn, TRequest>(TIn content)
         {
-            return new StringContent(JsonConvert.SerializeObject(content), Encoding.UTF8, "application/json");
+            var requestContent = _mapper.Map<TIn, TRequest>(content);
+
+            return new StringContent(JsonConvert.SerializeObject(requestContent), Encoding.UTF8, "application/json");
         }
     }
 }
