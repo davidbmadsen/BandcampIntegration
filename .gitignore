@@ -1,6 +1,6 @@
 # Current project
-appSettings.json
-appSettings.Development.json
+*appSettings.json
+*appSettings.Development.json
 
 # globs
 Makefile.in
