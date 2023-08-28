@@ -1,6 +1,5 @@
 # Current project
-*appSettings.json
-*appSettings.Development.json
+FluxBandcampIntegration/appSettings*
 
 # globs
 Makefile.in
